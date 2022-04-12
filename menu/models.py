@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from helpers.models import Base
+from restaurant.models import RestaurantAddress
 
 
 class MealPhoto(models.Model):
@@ -17,6 +18,8 @@ class Units(Base):
 
 
 class Meal(Base):
+    address = models.ForeignKey(RestaurantAddress, on_delete=models.CASCADE, verbose_name='Адресс доставки')
+    categories = models.ManyToManyField(Category, blank=True, verbose_name='Категории')
     photos = models.ManyToManyField(MealPhoto, blank=True, verbose_name='Альбом')
     price = models.PositiveIntegerField("Цена")
     description = models.CharField("Описание", max_length=512)
@@ -25,5 +28,6 @@ class Meal(Base):
 
 
 class Comments(Base):
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     meal = models.ForeignKey(Meal, verbose_name='Блюда', on_delete=models.CASCADE, blank=True, null=True)
 
