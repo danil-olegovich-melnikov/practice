@@ -5,7 +5,7 @@ class Base(models.Model):
     created_date = models.DateField(auto_now=True)
     updated_date = models.DateField(auto_now=True)
     active = models.BooleanField(default=True)
-    name = models.CharField("", max_length=128)
+    name = models.CharField("Название", max_length=128)
 
     def __str__(self):
         return f"<{self.__class__.__name__}: {self.name}>"
