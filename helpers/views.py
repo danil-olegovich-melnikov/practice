@@ -1,3 +1,42 @@
 from django.shortcuts import render
+from menu.models import Meal, Category
+from django.core.paginator import Paginator
+
 
 # Create your views here.
+def homepage(request):
+    return render(request, 'helpers/index.html')
+
+
+def search(request):
+    data = {}
+    meals = Meal.objects.all()
+    categories = Category.objects.all()
+    page_number = 1
+
+    if request.method == "POST":
+        food_name = request.POST.get("food_name", "")
+        page_number = request.POST.get("page_number", 1)
+        if not str(page_number).isdigit():
+            page_number = 1
+
+        pks = []
+        for key in request.POST:
+            if key.startswith("category"):
+                pk = key.replace("category-", "")
+                pks.append(int(pk))
+
+        if len(pks) > 0:
+            meals = meals.filter(categories__in=pks)
+
+        if food_name != "":
+            meals = meals.filter(name__icontains=food_name)
+            data['food_name'] = food_name
+
+    meals = Paginator(meals, 9)
+    data['meals'] = meals.page(page_number)
+    data['pages'] = meals.page_range
+    data['page_number'] = page_number
+    data['categories'] = categories
+
+    return render(request, 'helpers/search.html', data)

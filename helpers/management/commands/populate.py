@@ -1,9 +1,32 @@
+import random
+
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 
 from helpers import models as models_helpers
 from menu import models as models_menu
 from restaurant import models as models_restaurant
+from faker import Faker
+
+faker = Faker("ru_RU")
+
+
+def meal_generation(units, addresses):
+    name = random.choice(food_names).capitalize()
+    price = random.randint(2, 50) * 100
+    description = " ".join(faker.words(random.randint(5, 50)))
+    size = random.randint(1, 400)
+    units = random.choice(units)
+    address = random.choice(addresses)
+
+    return {
+        "name": name,
+        "price": price,
+        "description": description,
+        "size": size,
+        "units": units,
+        "address": address,
+    }
 
 
 class Command(BaseCommand):
@@ -11,44 +34,114 @@ class Command(BaseCommand):
 
     @staticmethod
     def populate():
-        user1 = User(username="user", first_name="Данил", last_name="Мельников", is_superuser=True, is_staff=True)
-        user1.set_password('1234')
-        user1.save()
-        #others
+        users = [
+            User(username="user", first_name="Данил", last_name="Мельников", is_superuser=True, is_staff=True),
+            User(username="adinay", first_name="Адинай", last_name="Туратбекова"),
+            User(username="timur", first_name="Тимур", last_name="Болотов"),
+            User(username="ruslan", first_name="Руслан", last_name="Неманов"),
+        ]
 
-        location1 = models_helpers.Location(name='МЕГА, Розыкабиева')
-        location1.save()
-        #others
+        for x in range(100):
+            users.append(User(username=faker.user_name(), first_name=faker.first_name(), last_name=faker.last_name()))
 
-        restaurant1 = models_restaurant.Restaurant(name='Лагман Сити', phone='+7700000000', user=user1)
-        restaurant1.save()
-        # others
+        for user in users:
+            user.set_password("1234")
+            user.save()
 
-        restaurant_address1 = models_restaurant.RestaurantAddress(name='Точка 1', location=location1, restaurant=restaurant1)
-        restaurant_address1.save()
-        # others
+        print("Users created successfully")
 
-        category1 = models_menu.Category(name='Жаренное')
-        category1.save()
-        # others
+        # ---------------------
+        addresses = [
+            models_helpers.Location(name='МЕГА, Розыкабиева'),
+            models_helpers.Location(name='Розабакиева 220'),
+            models_helpers.Location(name='Мега вверхняя'),
+        ]
 
-        unit1 = models_menu.Units(name='грамм').save()
-        # others
+        for x in range(20):
+            addresses.append(models_helpers.Location(name=faker.address()))
 
-        meal1 = models_menu.Meal(
-            name='Лагман',
-            price=1000,
-            description='Вкусный лагман с бараниной',
-            size=300,
-            units=unit1,
-            address=restaurant_address1,
-        )
-        meal1.save()
-        meal1.categories.add(category1)
-        # others
+        for address in addresses:
+            address.save()
 
-        models_menu.Comments(meal=meal1, name='Заказывал лагман, мне очень понравилось, много мяса', user=user1).save()
-        #others
+        print("Addresses created successfully")
+
+        # ---------------------
+        restaurants = [
+            models_restaurant.Restaurant(name='Лагман Сити', phone='+7700000000', user=users[1]),
+            models_restaurant.Restaurant(name='У Тимурчика', phone='+7700000000', user=users[2]),
+            models_restaurant.Restaurant(name='У Тимурчика', phone='+7700000000', user=users[2]),
+        ]
+
+        for restaurant in restaurants:
+            restaurant.save()
+
+        print("Restaurants created successfully")
+
+        # ---------------------
+        restaurant_addresses = []
+
+        for x in range(20):
+            restaurant_addresses.append(
+                models_restaurant.RestaurantAddress(
+                    name=faker.name(),
+                    location=random.choice(addresses),
+                    restaurant=random.choice(restaurants)
+                ),
+            )
+
+        for restaurant_address in restaurant_addresses:
+            restaurant_address.save()
+
+        print("Restaurant Addresses created successfully")
+        # ---------------------
+        categories = [
+            models_menu.Category(name='Национальное кухня'),
+            models_menu.Category(name='Европейская кухня'),
+            models_menu.Category(name='Китайская кухня'),
+            models_menu.Category(name='Суши'),
+            models_menu.Category(name='Fast Food'),
+            models_menu.Category(name='Продуктовые бренды'),
+            models_menu.Category(name='Пицца'),
+            models_menu.Category(name='Кухни мира'),
+            models_menu.Category(name='Кофейни'),
+            models_menu.Category(name='Десерты'),
+            models_menu.Category(name='Корейская кухня'),
+        ]
+
+        for category in categories:
+            category.save()
+
+        print("Categories Addresses created successfully")
+        # ---------------------
+        units = [
+            models_menu.Units(name='грамм'),
+            models_menu.Units(name='мл'),
+            models_menu.Units(name='порция'),
+            models_menu.Units(name='кг'),
+            models_menu.Units(name='литр'),
+            models_menu.Units(name='шт'),
+        ]
+
+        for unit in units:
+            unit.save()
+
+        print("Units created successfully")
+        # ---------------------
+        meals = []
+
+        for i in range(100):
+            meals.append(models_menu.Meal(**meal_generation(units, restaurant_addresses)))
+
+        for meal in meals:
+            meal.save()
+            for x in range(random.randint(1, 5)):
+                meal.categories.add(random.choice(categories))
+
+            for x in range(random.randint(1, 20)):
+                models_menu.Comments(meal=meal, name=" ".join(faker.words(random.randint(5, 30))),
+                                     user=random.choice(users)).save()
+
+        print("Meals created successfully")
 
     def handle(self, *args, **options):
         if User.objects.filter(username='user').exists():
@@ -58,3 +151,767 @@ class Command(BaseCommand):
         self.populate()
 
         self.stdout.write(self.style.SUCCESS('Successfully populated'))
+
+
+food_names = """
+abiyuch
+acerola
+acorn
+agave
+agents
+agutuk
+alfalfa
+amaranth
+animal
+apache
+apple
+apples
+applesauce
+apricot
+apricots
+arrowhead
+arrowroot
+artichokes
+artificial
+arugula
+ascidians
+asparagus
+avocados
+baby
+babyfood
+bacon
+bagel
+bagels
+baking
+balls
+balsam-pear
+bamboo
+bananas
+bar
+barbecue
+barley
+bars
+basil
+bean
+beans
+bear
+beef
+beerwurst
+beet
+beets
+berry
+besan
+beverage
+beverages
+biscuits
+bison
+bits
+bitter
+blackberries
+blackberry
+blackeyes
+blend
+blueberries
+blueberry
+bockwurst
+bologna
+borage
+bowl
+boysenberries
+bran
+brand
+bratwurst
+braunschweiger
+bread
+breadfruit
+breakfast
+breast
+broadbeans
+broccoli
+broth
+brotwurst
+brussels
+buckwheat
+buffalo
+bulgur
+buns
+burdock
+burgers
+burrito
+butter
+butterbur
+butters
+cabbage
+cake
+candied
+candies
+capers
+carambola
+carbonated
+cardoon
+caribou
+carissa
+carne
+carob
+carob-flavor
+carrot
+carrots
+cassava
+catsup
+cattail
+cauliflower
+celeriac
+celery
+celtuce
+cereal
+cereals
+chard
+chayote
+cheese
+cheesecake
+cheesefurter
+cherimoya
+cherries
+chewing
+chicken
+chickpea
+chickpeas
+chicory
+chilchen
+child
+chili
+chips
+chiton
+chives
+chocolate
+chocolate-flavor
+chocolate-flavored
+chokecherries
+chorizo
+chrysanthemum
+cilantro
+cinnamon
+citronella
+citrus
+clam
+clementines
+cloudberries
+cockles
+cocktail
+cocoa
+coffee
+coffeecake
+collards
+commercially
+concentrate
+cone
+cones
+confectionery
+containing
+cookie
+cookies
+coriander
+corn
+corned
+cornmeal
+cornsalad
+cornstarch
+cotija
+couscous
+cowpeas
+crabapples
+cracker
+crackers
+cranberries
+cranberry
+cranberry-apple
+cranberry-apricot
+cranberry-grape
+cranberry-orange
+cream
+creams
+creamy
+cress
+croissants
+croutons
+crumbs
+crust
+crustaceans
+cucumber
+currants
+custard-apple
+custards
+dairy
+dandelion
+danish
+dates
+deer
+dessert
+desserts
+diabetes
+dill
+dinner
+dip
+dishes
+dock
+dogs
+dough
+doughnuts
+dove
+dressing
+drink
+drippings
+drumstick
+dry
+duck
+dulce
+durian
+dutch
+ear
+edamame
+egg
+eggnog
+eggnog-flavor
+eggplant
+eggs
+elderberries
+elk
+emu
+endive
+energy
+entrees
+epazote
+eppaw
+extender
+extract
+falafel
+fast
+fat
+fava
+feijoa
+fennel
+fern
+ferns
+fiddlehead
+figs
+fillets
+fillings
+fireweed
+fish
+flakes
+flan
+flavored
+flour
+flours
+flower
+flowers
+fluid
+focaccia
+foie
+food
+foods
+formula
+formulated
+frankfurter
+franks
+frijoles
+frog
+from
+frostings
+frozen
+fruit
+fruit-flavored
+frybread
+frying
+fungi
+garbanzo
+garlic
+gelatin
+gelatins
+germ
+ginger
+gluten
+goat
+goose
+gooseberries
+gourd
+grain
+gram
+granola
+grape
+grapefruit
+grapes
+gras
+grass
+gravy
+green
+greens
+groats
+ground
+groundcherries
+grouse
+guacamole
+guanabana
+guava
+guavas
+guinea
+gum
+gums
+ham
+hazelnut
+hazelnuts
+headcheese
+hearts
+hen
+hibiscus
+hips
+hominy
+honey
+horned
+horseradish
+household
+huckleberries
+hummus
+hush
+hyacinth
+hyacinth-beans
+hydrogenated
+hydrolyzed
+ice
+imitation
+incaparina
+industrial
+isolate
+jackfruit
+jams
+java-plum
+jellies
+jellyfish
+jerusalem-artichokes
+jicama
+juice
+jujube
+jute
+kale
+kanpyo
+keikitos
+kielbasa
+kiwano
+kiwifruit
+knackwurst
+kohlrabi
+kumquats
+lamb
+lambs
+lambsquarters
+lard
+lasagna
+lean
+leavening
+leaves
+lebanon
+leche
+leeks
+legs
+lemon
+lemonade
+lemonade-flavor
+lemons
+lentils
+lettuce
+lima
+lime
+limeade
+limes
+link
+links
+lion
+litchis
+liver
+liverwurst
+loaf
+loganberries
+loin
+longans
+loquats
+lotus
+lulo
+lunch
+luncheon
+lupins
+luxury
+macaroni
+made
+malabar
+malt
+malted
+mammy-apple
+mango
+mangos
+mangosteen
+maraschino
+margarine
+margarine-like
+marmalade
+mashu
+mayonnaise
+meal
+meat
+meatballs
+meatloaf
+melon
+melons
+milk
+millet
+miso
+mixed
+mocha
+molasses
+mollusks
+moose
+mortadella
+mothbeans
+mother's
+mountain
+mouse
+muffin
+muffins
+mulberries
+mung
+mungo
+mush
+mushrooms
+mustard
+mutton
+nance
+naranjilla
+natto
+navajo
+nectar
+nectarines
+nettles
+new
+noodles
+nopales
+novelties
+nutritional
+nuts
+oat
+oats
+octopus
+oheloberries
+oil
+oil-butter
+okara
+okra
+olive
+olives
+onion
+onions
+oopah
+orange
+orange-flavor
+orange-grapefruit
+oranges
+ostrich
+oven-roasted
+palm
+pancakes
+papad
+papaya
+papayas
+parfait
+parmesan
+parsley
+parsnips
+passion-fruit
+pasta
+pastrami
+pastries
+pastry
+pate
+patties
+patty
+pea
+peach
+peaches
+peanut
+peanuts
+pear
+pears
+peas
+pectin
+peel
+people
+pepeao
+pepper
+peppered
+peppermint
+pepperoni
+peppers
+persimmons
+pheasant
+phyllo
+pickle
+pickles
+picnic
+pie
+pigeon
+pigeonpeas
+piki
+pimento
+pimiento
+pineapple
+pinon
+pitanga
+pizza
+plain
+plantains
+plums
+pockets
+pokeberry
+pomegranate
+pomegranates
+popcorn
+pork
+potato
+potatoes
+potsticker
+poultry
+powder
+prairie
+prepared
+preserves
+pretzels
+prickly
+product
+products
+protein
+prune
+prunes
+pudding
+puddings
+puff
+puffs
+pulled
+pulp
+pummelo
+pumpkin
+punch
+punch-flavor
+puppies
+puree
+purslane
+quail
+quarters
+queso
+quinces
+quinoa
+raab
+radicchio
+radish
+radishes
+raisins
+rambutan
+raspberries
+ravioli
+ready-to-drink
+ready-to-eat
+red
+reddi
+reduced
+refried
+relish
+rennin
+replacement
+restaurant
+rhubarb
+rice
+rings
+roast
+rojos
+roll
+rolls
+root
+roots
+rose
+rose-apples
+roselle
+rosemary
+rowal
+ruffed
+rutabagas
+rye
+salad
+salami
+salmon
+salmonberries
+salsify
+salt
+sandwich
+sapodilla
+sapote
+sauce
+sauerkraut
+sausage
+school
+scrapple
+sea
+seal
+seasoning
+seaweed
+seeds
+semolina
+sesbania
+shake
+shakes
+shallots
+shell
+shells
+sherbet
+shoots
+shortening
+shoyu
+side
+smelt
+smoked
+smoothie
+snack
+snacks
+sorghum
+souffle
+soup
+sourdock
+soursop
+soy
+soybean
+soybeans
+soyburgers
+soymilk
+spaghetti
+spanish
+spearmint
+spelt
+spices
+spinach
+split
+spread
+sprouts
+squab
+squash
+squirrel
+steelhead
+stew
+stew/soup
+sticks
+stinging
+strawberries
+strawberry-flavor
+strudel
+stuffing
+substitute
+substitutes
+succotash
+sugar
+sugar-apples
+sugars
+supplement
+swamp
+sweet
+sweetener
+sweeteners
+swisswurst
+syrup
+syrups
+taco
+tamales
+tamari
+tamarind
+tamarinds
+tangerine
+tangerines
+tannier
+tapioca
+taquitos
+taro
+tart
+tea
+teff
+tempeh
+tenders
+tennis
+thigh
+thuringer
+thyme
+toast
+toaster
+toddler
+tofu
+tomatillos
+tomato
+tomatoes
+topping
+toppings
+tortellini
+tortilla
+tortillas
+tostada
+triticale
+trout
+tuber
+tunicate
+tunughnak
+turkey
+turnip
+turnips
+turnover
+turtle
+twists
+vanilla
+veal
+vegetable
+vegetable-oil
+vegetables
+vegetarian
+veggie
+venison
+vermicelli
+vinegar
+vinespinach
+vital
+volteados
+waffle
+waffles
+walrus
+wasabi
+water
+waterchestnuts
+watercress
+watermelon
+waxgourd
+weed
+wheat
+whey
+whiskey
+whole
+wild
+willow
+wine
+winged
+wocas
+wonton
+wrappers
+yachtwurst
+yam
+yambean
+yardlong
+yautia
+yeast
+yellow
+yogurt
+yogurts
+zealand
+zwieback
+"""
+
+food_names = food_names.strip().split()
