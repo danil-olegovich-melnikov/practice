@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from helpers.models import Base
-from restaurant.models import RestaurantAddress
+from company.models import CompanyAddress
 
 
 class Category(Base):
@@ -19,7 +19,7 @@ class MealAlbum(models.Model):
 
 
 class Meal(Base):
-    address = models.ForeignKey(RestaurantAddress, on_delete=models.CASCADE, verbose_name='Адресс доставки')
+    address = models.ForeignKey(CompanyAddress, on_delete=models.CASCADE, verbose_name='Адресс доставки')
     categories = models.ManyToManyField(Category, blank=True, verbose_name='Категории')
     price = models.PositiveIntegerField("Цена")
     description = models.CharField("Описание", max_length=512)
@@ -27,6 +27,8 @@ class Meal(Base):
     units = models.ForeignKey(Units, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Единица Измерения')
     album = models.ManyToManyField(MealAlbum, blank=True, verbose_name='Альбом фотографий')
 
+    class Meta:
+        ordering =['id']
 
 class Comments(Base):
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)

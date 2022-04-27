@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from helpers import models as models_helpers
 from menu import models as models_menu
-from restaurant import models as models_restaurant
+from company import models as models_company
 from faker import Faker
 
 faker = Faker("ru_RU")
@@ -66,14 +66,25 @@ class Command(BaseCommand):
         print("Addresses created successfully")
 
         # ---------------------
+        phones = []
+        for x in range(20):
+            phones.append(models_company.Phone(name=str(random.randint(10**6, 10**10))))
+
+        for phone in phones:
+            phone.save()
+
+        print("Phone created successfully")
+
         restaurants = [
-            models_restaurant.Restaurant(name='Лагман Сити', phone='+7700000000', user=users[1]),
-            models_restaurant.Restaurant(name='У Тимурчика', phone='+7700000000', user=users[2]),
-            models_restaurant.Restaurant(name='У Тимурчика', phone='+7700000000', user=users[2]),
+            models_company.Company(name='Лагман Сити', user=users[1], role='restaurant'),
+            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant'),
+            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant'),
         ]
 
         for restaurant in restaurants:
             restaurant.save()
+            for x in range(random.randint(1, 3)):
+                restaurant.phones.add(random.choice(phones))
 
         print("Restaurants created successfully")
 
@@ -82,15 +93,17 @@ class Command(BaseCommand):
 
         for x in range(20):
             restaurant_addresses.append(
-                models_restaurant.RestaurantAddress(
+                models_company.CompanyAddress(
                     name=faker.name(),
                     location=random.choice(addresses),
-                    restaurant=random.choice(restaurants)
+                    restaurant=random.choice(restaurants),
                 ),
             )
 
         for restaurant_address in restaurant_addresses:
             restaurant_address.save()
+            for x in range(random.randint(1, 3)):
+                restaurant_address.phones.add(random.choice(phones))
 
         print("Restaurant Addresses created successfully")
         # ---------------------

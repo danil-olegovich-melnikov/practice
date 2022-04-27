@@ -1,0 +1,37 @@
+{% extends 'helpers/base.html' %}
+
+{% block page_title %}Регистрация на сайте{% endblock %}
+
+{% block body %}
+<div class="container bg-light my-5 p-5 round shadow">
+    <h2 class="my-4">Регистрация</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input required type="text" class="form-control" value="{{ username }}" id="login_form" name="username"
+                   placeholder="Никнейм">
+        </div>
+        <div class="mb-3">
+            <input required type="text" class="form-control" value="{{ email }}" name="email"
+                   placeholder="Почта">
+        </div>
+        <div class="mb-3">
+            <input required type="password" class="form-control" name="password1" id="password1_form"
+                   placeholder="Пароль">
+        </div>
+        <div class="mb-3">
+            <input required type="password" class="form-control" name="password2" id="password2_form"
+                   placeholder="Повторите пароль">
+        </div>
+        <div class="mb-3 form-check">
+            <p class="text-danger">{{ message }}</p>
+        </div>
+        <button type="submit" class="btn btn-primary">Регистрация</button>
+
+        <div class="mt-2">
+            <small>Уже имеется аккаунт? <a href="{% url 'worker:login' %}">Войти</a></small>
+        </div>
+    </form>
+</div>
+{% endblock %}

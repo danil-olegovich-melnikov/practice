@@ -16,3 +16,13 @@ class Base(models.Model):
 
 class Location(Base):
     name = models.CharField('Адрес', max_length=120)
+
+
+class Form(Base):
+    type = models.CharField(
+        "Тип",
+        choices=(("restaurant", "Ресторан"), ("worker", "Курьер"), ("company", "Компания")),
+        max_length=100,
+    )
+    contact = models.CharField("Способ связи", max_length=256)
+

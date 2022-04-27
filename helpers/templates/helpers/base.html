@@ -16,15 +16,32 @@
     <a class="navbar-brand text-info" href="#">Доставка.KZ</a>
     <ul class="navbar-nav flex-row ml-auto">
         <li class="nav-item active">
-            <a class="nav-link btn btn-outline-primary px-2" href="#">😋</a>
+            <a class="nav-link btn btn-outline-primary px-2" href="/search">😋</a>
         </li>
         <li class="nav-item active ml-3">
-            <a class="nav-link btn btn-outline-info px-2" href="#">👤</a>
+            <a class="nav-link btn btn-outline-info px-2"
+               href="{% if request.user.is_authenticated %}/profile{% else %}{% url 'worker:login' %}{% endif%}">
+                👤
+            </a>
         </li>
     </ul>
 </nav>
 {% block body %}
 {% endblock body %}
+
+<div class="bg-light mt-5">
+    <div class="container">
+        <footer class="py-3">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">О нас</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Программа лояльности</a></li>
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQ</a></li>
+            </ul>
+            <p class="text-center text-muted">© 2021 Pelegrin Team, Almau</p>
+        </footer>
+    </div>
+</div>
+
 
 <script src="https://kit.fontawesome.com/caf91bc8ee.js" crossorigin="anonymous"></script>
 {% block scripts %}
