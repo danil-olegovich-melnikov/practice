@@ -68,7 +68,7 @@ class Command(BaseCommand):
         # ---------------------
         phones = []
         for x in range(20):
-            phones.append(models_company.Phone(name=str(random.randint(10**6, 10**10))))
+            phones.append(models_company.Phone(name=str(random.randint(10 ** 6, 10 ** 10))))
 
         for phone in phones:
             phone.save()
@@ -76,15 +76,18 @@ class Command(BaseCommand):
         print("Phone created successfully")
 
         restaurants = [
-            models_company.Company(name='Лагман Сити', user=users[1], role='restaurant'),
-            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant'),
-            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant'),
+            models_company.Company(name='Лагман Сити', user=users[1], role='restaurant',
+                                   description="Фаст-фуд Плов в коробочке. Восточная кухня. Средний чек 1200-1500тг.Т РЦ Mega Center ул. Розыбакие"),
+            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant',
+                                   description="Блинчики с разными начинками, вкусные, хрустящие, с шоколадом"),
+            models_company.Company(name='Хлеб.kz', user=users[2], role='restaurant',
+                                   description="Домашний испеченный хлеб, натуральные ингрдиенты")
         ]
 
         for restaurant in restaurants:
             restaurant.save()
-            for x in range(random.randint(1, 3)):
-                restaurant.phones.add(random.choice(phones))
+        for x in range(random.randint(1, 3)):
+            restaurant.phones.add(random.choice(phones))
 
         print("Restaurants created successfully")
 
@@ -102,8 +105,8 @@ class Command(BaseCommand):
 
         for restaurant_address in restaurant_addresses:
             restaurant_address.save()
-            for x in range(random.randint(1, 3)):
-                restaurant_address.phones.add(random.choice(phones))
+        for x in range(random.randint(1, 3)):
+            restaurant_address.phones.add(random.choice(phones))
 
         print("Restaurant Addresses created successfully")
         # ---------------------
@@ -147,12 +150,12 @@ class Command(BaseCommand):
 
         for meal in meals:
             meal.save()
-            for x in range(random.randint(1, 5)):
-                meal.categories.add(random.choice(categories))
+        for x in range(random.randint(1, 5)):
+            meal.categories.add(random.choice(categories))
 
-            for x in range(random.randint(1, 20)):
-                models_menu.Comments(meal=meal, name=" ".join(faker.words(random.randint(5, 30))),
-                                     user=random.choice(users)).save()
+        for x in range(random.randint(1, 20)):
+            models_menu.Comments(meal=meal, name=" ".join(faker.words(random.randint(5, 30))),
+                                 user=random.choice(users)).save()
 
         print("Meals created successfully")
 

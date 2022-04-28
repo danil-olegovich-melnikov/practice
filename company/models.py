@@ -12,6 +12,7 @@ class Phone(Base):
 class Company(Base):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Администратор')
     phones = models.ManyToManyField(Phone, verbose_name='Телефона')
+    description = models.CharField("Описание", max_length=512, blank=True)
     role = models.CharField(
         "Роль",
         max_length=20,

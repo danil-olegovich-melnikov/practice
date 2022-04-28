@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from menu.models import Meal, Category
-from company.models import Company
+from company.models import Company, CompanyAddress
 from django.core.paginator import Paginator
 from helpers.models import Form
 
@@ -62,3 +62,18 @@ def form(request):
 def restaurants(request):
     companies = Company.objects.filter(role='restaurant')
     return render(request, "helpers/restaurants.html", {"companies": companies})
+
+
+def restaurant(request, pk):
+    try:
+        company = Company.objects.get(id=pk, role='restaurant')
+        company_addresses = CompanyAddress.objects.filter(restaurant=company)
+
+        data = {
+            "company": company,
+            "company_addresses": company_addresses,
+        }
+
+        return render(request, "helpers/restaurant.html", data)
+    except:
+        return redirect("/")
