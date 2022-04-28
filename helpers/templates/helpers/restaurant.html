@@ -1,7 +1,31 @@
 {% extends 'helpers/base.html' %}
 
-{% block page_title %}Ресторан - {{restaurant.name}}{% endblock %}
+{% block page_title %}Ресторан - {{company.name}}{% endblock %}
 
 {% block body %}
+<main class="text-white">
+    <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <div class="img-placeholder"></div>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <h1 class="display-5 fw-bold lh-1 mb-3">{{ company.name }}</h1>
+                <p class="lead">{{company.description}}</p>
+            </div>
+        </div>
+        <div class="text-center">
+            <h3>Адреса доставок</h3>
+            {% for address in company_addresses %}
+            <a href="#" class="btn btn-outline-light m-2"><i class="fa-solid fa-location-arrow"></i> {{ address.name }}</a>
+            {% endfor %}
+        </div>
 
+        <div class="text-center my-2">
+            <a href="#" class="btn btn-info">Посмотреть все доступные товары</a>
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+</main>
 {% endblock %}

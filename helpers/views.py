@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from menu.models import Meal, Category
-from company.models import Company
+from company.models import Company, CompanyAddress
 from django.core.paginator import Paginator
-from helpers.models import Form
+from helpers.models import Form, Faqs
 
 
 # Create your views here.
@@ -65,7 +65,8 @@ def restaurants(request):
 
 
 def faqs(request):
-    return render(request, 'helpers/faqs.html')
+    faqs = Faqs.objects.all()
+    return render(request, 'helpers/faqs.html', {"faqs": faqs})
 
 
 def restaurant(request, pk):

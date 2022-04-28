@@ -1,6 +1,6 @@
 import random
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 
 from helpers import models as models_helpers
@@ -34,6 +34,21 @@ class Command(BaseCommand):
 
     @staticmethod
     def populate():
+        models_helpers.Faqs(
+            name="Можно ли заказать с разных заведений в одном заказе?",
+            description="Да! Вы можете выбрать еду из разных ресторанов, положить в корзинку, оплатить заказ и ждать свой заказ!"
+        ).save()
+
+        models_helpers.Faqs(
+            name="Я являюсь сотрудником компании, которая еще не зарегистрирована на вашем сайте, что мне делать?",
+            description="Оставьте заявку, мы свяжемся с Вами в ближайшем времени и осуществим регистрацию!"
+        ).save()
+
+        models_helpers.Faqs(
+            name="До какого периода времени я должен сделать заказ?",
+            description="Обед - до 11:00, ужин - до 16:00"
+        ).save()
+
         users = [
             User(username="user", first_name="Данил", last_name="Мельников", is_superuser=True, is_staff=True),
             User(username="adinay", first_name="Адинай", last_name="Туратбекова"),

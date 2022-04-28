@@ -27,3 +27,6 @@ class Form(Base):
     contact = models.CharField("Способ связи", max_length=256)
     description = models.CharField("Описание", max_length=512)
 
+
+class Faqs(Base):
+    description = models.CharField("FAQS", max_length=256)
