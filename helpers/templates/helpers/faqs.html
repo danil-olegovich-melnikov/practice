@@ -1,0 +1,58 @@
+{% extends "helpers/base.html" %}
+{% load static %}
+
+{% block body %}
+<main>
+    <div class="homepage" style="background-image: url({% static 'img/bg.jpg' %})">
+        <div class="wrapper">
+            <div class="wrapper-content">
+                <div class="container h-100 text-white d-flex flex-column justify-content-center align-items-center">
+                    <h1 class="display-4">Корпоративная Доставка</h1>
+                    <p>Быстрая дешевая доставка для компаний в городе Алматы</p>
+                    <a href="{% url 'helpers:search' %}" class="btn btn-info mt-4">Продолжить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-white text-center">
+        <div class="px-4 py-5 my-5">
+            <img class="d-block mx-auto mb-4" src="{% static 'img/restaurants/little-bird.svg' %}" alt="" width="72"
+                 height="57">
+            <h1 class="display-5 fw-bold">Ответы на часто задаваемые вопросы:</h1>
+            <button class="accordion">Можно ли заказать с разных заведений в одном заказе?</button>
+            <div class="panel">
+                <p>Да! Вы можете выбрать еду из разных ресторанов, положить в корзинку, оплатить заказ и ждать свой заказ!</p>
+            </div>
+            <button class="accordion">Я являюсь сотрудником компании, которая еще не зарегистрирована на вашем сайте, что мне делать?</button>
+            <div class="panel">
+                <p>Оставьте заявку, мы свяжемся с Вами в ближайшем времени и осуществим регистрацию!</p>
+            </div>
+            <button class="accordion">До какого периода времени я должен сделать заказ?</button>
+            <div class="panel">
+                <p>Обед - до 11:00, ужин - до 16:00</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+        
+        for (i = 0; i < acc.length; i++) {
+          acc[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+              panel.style.display = "none";
+            } else {
+              panel.style.display = "block";
+            }
+          });
+        }
+        </script>
+
+
+
+</main>
+
+{%endblock%}

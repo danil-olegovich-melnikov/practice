@@ -62,3 +62,6 @@ def form(request):
 def restaurants(request):
     companies = Company.objects.filter(role='restaurant')
     return render(request, "helpers/restaurants.html", {"companies": companies})
+
+def faqs(request):
+    return render(request, 'helpers/faqs.html')
