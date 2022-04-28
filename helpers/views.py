@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from menu.models import Meal, Category
+from company.models import Company
 from django.core.paginator import Paginator
+from helpers.models import Form
 
 
 # Create your views here.
@@ -40,3 +42,23 @@ def search(request):
     data['categories'] = categories
 
     return render(request, 'helpers/search.html', data)
+
+
+def form(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "")
+        type = request.POST.get("type", "")
+        contact = request.POST.get("contact", "")
+        description = request.POST.get("description", "")
+
+        try:
+            Form(name=name, type=type, contact=contact, description=description).save()
+        except:
+            pass
+
+    return redirect('/')
+
+
+def restaurants(request):
+    companies = Company.objects.filter(role='restaurant')
+    return render(request, "helpers/restaurants.html", {"companies": companies})
