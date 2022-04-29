@@ -17,12 +17,12 @@
         <div class="text-center">
             <h3>Адреса доставок</h3>
             {% for address in company_addresses %}
-            <a href="#" class="btn btn-outline-light m-2"><i class="fa-solid fa-location-arrow"></i> {{ address.name }}</a>
+            <a href="/search?address={{address.id}}" class="btn btn-outline-light m-2"><i class="fa-solid fa-location-arrow"></i> {{ address.name }}</a>
             {% endfor %}
         </div>
 
         <div class="text-center my-2">
-            <a href="#" class="btn btn-info">Посмотреть все доступные товары</a>
+            <a href="/search?company={{company.id}}" class="btn btn-info">Посмотреть все доступные товары</a>
         </div>
     </div>
 

@@ -35,6 +35,15 @@ def search(request):
             meals = meals.filter(name__icontains=food_name)
             data['food_name'] = food_name
 
+    if request.method == "GET":
+        address = request.GET.get('address', "")
+        company = request.GET.get('company', "")
+
+        if len(address) > 0:
+            meals = meals.filter(address_id=address)
+        elif len(company) > 0:
+            meals = meals.filter(address_id__in=CompanyAddress.objects.filter(restaurant_id=company))
+
     meals = Paginator(meals, 9)
     data['meals'] = meals.page(page_number)
     data['pages'] = meals.page_range
