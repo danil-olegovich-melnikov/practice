@@ -1,6 +1,11 @@
 {% extends "helpers/base.html" %}
 {% load static %}
 
+{% block nav_item %}
+<div class="nav-link btn btn-outline-info px-2" data-toggle="modal" data-target="#orders" id="showorders">
+    Оформить заказ
+</div>
+{% endblock %}
 
 {% block body %}
 <div class="container search">
@@ -92,6 +97,10 @@
                                             {% endfor %}
                                         </div>
                                         <p>{{ meal.description|capfirst }}</p>
+                                        <div class="buy btn btn-info" data-target="{{meal.id}}"
+                                             data-description="{{meal.name}}">
+                                            Добавить в корзину
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -111,6 +120,60 @@
             {% else %}
             <p class="text-white">Упс, на данный момент заказы закрыты</p>
             {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="orders" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Оформить заказ</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/success_order/" method="post" class="px-3">
+                    <h5 class="my-2 text-info">Оформление:</h5>
+                    {% csrf_token %}
+                    <input type="text" name="orders" id="orders-input" hidden>
+                    <div class="form-group">
+                        <label>Выберите дату доставки</label>
+                        <input type="date" class="form-control" name="date">
+                    </div>
+                    <div class="form-group">
+                        <label>Выберите время доставки</label>
+                        <select class="form-control">
+                            <option value="morning">9:00-10:00</option>
+                            <option value="lunch">12:00-13:00</option>
+                            <option value="dinner">16:00-17:00</option>
+                        </select>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    {% else %}
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="Ваше ФИО">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="contact" placeholder="Способ связи">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="note" placeholder="Дополнение к заказу"></textarea>
+                    </div>
+                    {% endif %}
+                    <h5 class="my-2 text-info">Финальный список заказов:</h5>
+                    <ul class="list-group" id="orders-list">
+                    </ul>
+
+                    <div class="text-center my-3">
+                        <button type="submit" class="btn btn-info">Заказать</button>
+                    </div>
+                </form>
+
+
+            </div>
         </div>
     </div>
 </div>
@@ -148,6 +211,34 @@
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
     }
+
+    let orders = "";
+    // localStorage.orders = "";
+    if (localStorage.orders) {
+        orders = localStorage.getItem("orders");
+        orders.split("|").forEach(myFunction);
+
+        function myFunction(value, index, array) {
+            if (value) {
+                let name = value.split("-")[1]
+
+                $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`)
+                $("#orders-input").val(orders);
+            }
+        }
+    }
+
+
+    $(".buy").on("click", (e) => {
+        alert("Добавлено в корзину, чтобы оформить заказ, нажмите кнопку завершить заказ");
+        let name = e.target.getAttribute("data-description");
+        let pk = e.target.getAttribute("data-target");
+        orders = orders + pk + "-" + name + "|"
+        localStorage.setItem("orders", orders);
+
+        $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`);
+        $("#orders-input").val(orders);
+    })
 </script>
 {% endblock %}
 

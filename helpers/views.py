@@ -91,3 +91,7 @@ def restaurant(request, pk):
         return render(request, "helpers/restaurant.html", data)
     except:
         return redirect("/")
+
+
+def success_order(request):
+    return render(request, "helpers/success-order.html")

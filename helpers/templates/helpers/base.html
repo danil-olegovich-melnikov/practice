@@ -17,17 +17,31 @@
     <a class="navbar-brand text-info" href="/">Pelegrin</a>
     <ul class="navbar-nav flex-row ml-auto">
         <li class="nav-item">
+            {% block nav_item %}
+            {% endblock %}
+        </li>
+        <li class="nav-item ml-3 active">
             <a class="nav-link btn btn-outline-primary px-2" href="/search/">😋</a>
         </li>
         <li class="nav-item ml-3">
             <a class="nav-link btn btn-outline-primary px-2" href="/restaurants/">🏢</a>
         </li>
+        {% if request.user.is_authenticated %}
         <li class="nav-item active ml-3">
             <a class="nav-link btn btn-outline-info px-2"
-               href="{% if request.user.is_authenticated %}/profile{% else %}{% url 'worker:login' %}{% endif%}">
+               href="{% url 'worker:logout' %}">
+                🚪🏃
+            </a>
+        </li>
+        {% else %}
+        <li class="nav-item active ml-3">
+            <a class="nav-link btn btn-outline-info px-2"
+               href="{% url 'worker:login' %}">
                 👤
             </a>
         </li>
+        {% endif %}
+
     </ul>
 </nav>
 {% block body %}

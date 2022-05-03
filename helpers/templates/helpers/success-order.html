@@ -1,0 +1,16 @@
+{% extends "helpers/base.html" %}
+{% load static %}
+
+{% block body %}
+<div class="container text-white">
+    <div class="py-5">
+        <h1 class="display-4">Скоро вам заказ приедет к вам, спасибо за заказ</h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    localStorage.setItem("orders", "")
+</script>
+{% endblock %}
