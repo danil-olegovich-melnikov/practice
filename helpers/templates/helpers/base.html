@@ -20,24 +20,24 @@
             {% block nav_item %}
             {% endblock %}
         </li>
-        <li class="nav-item ml-3 active">
-            <a class="nav-link btn btn-outline-primary px-2" href="/search/">😋</a>
+        <li class="nav-item ml-3">
+            <a class="nav-link btn btn-outline-primary px-2" href="/search/">Меню</a>
         </li>
         <li class="nav-item ml-3">
-            <a class="nav-link btn btn-outline-primary px-2" href="/restaurants/">🏢</a>
+            <a class="nav-link btn btn-outline-primary px-2" href="/restaurants/">Заведения</a>
         </li>
         {% if request.user.is_authenticated %}
-        <li class="nav-item active ml-3">
-            <a class="nav-link btn btn-outline-info px-2"
+        <li class="nav-item ml-3">
+            <a class="nav-link btn btn-outline-primary px-2"
                href="{% url 'worker:logout' %}">
-                🚪🏃
+                Выйти в аккаунт
             </a>
         </li>
         {% else %}
-        <li class="nav-item active ml-3">
-            <a class="nav-link btn btn-outline-info px-2"
+        <li class="nav-item ml-3">
+            <a class="nav-link btn btn-outline-primary px-2"
                href="{% url 'worker:login' %}">
-                👤
+                Войти в аккаунт
             </a>
         </li>
         {% endif %}

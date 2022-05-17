@@ -2,243 +2,250 @@
 {% load static %}
 
 {% block nav_item %}
-<div class="nav-link btn btn-outline-info px-2" data-toggle="modal" data-target="#orders" id="showorders">
-    Оформить заказ
-</div>
+    <div class="nav-link btn btn-outline-info px-2" data-toggle="modal" data-target="#orders" id="showorders">
+        Оформить заказ
+    </div>
 {% endblock %}
 
 {% block body %}
-<div class="container search">
-    <div class="row py-5">
-        <div class="col-3">
-            <div class="bg-white rounded shadow py-4 px-2 text-center">
-                <form method="POST" id="filtering-form">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="food_name" class="h5 text-info ">Поиск любимого блюда</label>
+    <div class="container search">
+        <div class="row py-5">
+            <div class="col-3">
+                <div class="bg-white rounded shadow py-4 px-2 text-center">
+                    <form method="POST" id="filtering-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="food_name" class="h5 text-info ">Поиск любимого блюда</label>
 
-                        <input type="text" class="form-control" id="food_name" name="food_name"
-                               value="{{food_name}}" placeholder="Плов, пицца, суши">
-                    </div>
-
-                    {% if categories %}
-                    <h5 class="text-info">Категории</h5>
-                    <ul class="list">
-
-                        {% for category in categories %}
-                        <li class="my-2">
-                            <input class="category-input" type="checkbox" hidden
-                                   id="category-{{category.id}}"
-                                   name="category-{{category.id}}">
-                            <div class="link category btn btn-light w-100" data-target="category-{{category.id}}">
-                                {{category.name}}
-                            </div>
-                        </li>
-                        {% endfor %}
-
-                    </ul>
-
-                    <input type="number" id="page-number" name="page_number" hidden>
-                    <button type="submit" class="btn btn-info">
-                        <i class="fa-solid fa-magnifying-glass"></i> Показать
-                    </button>
-                </form>
-                {% else %}
-                <p><small>Упс... что-то пошло не так</small></p>
-                {% endif %}
-            </div>
-        </div>
-
-
-        <div class="col-9">
-            <div class="mb-5">
-                <h2 class="text-white">Не забываемый вкус в каждом блюде</h2>
-            </div>
-            <div class="row">
-                {% if meals %}
-                {% for meal in meals %}
-                <div class="col-4 my-3">
-                    <a href="#" class="text-center pl-1 w-100" data-toggle="modal" data-target="#FoodModal{{meal.id}}">
-                        <div class="card">
-                            <div class="card-img"></div>
-                            <div class="py-2">
-                                <h4>{{ meal.name }}</h4>
-                                <small>{{ meal.price }} тенге</small><br>
-                                <small class="bg-danger">{{ meal.size}} {{ meal.units.name }}</small>
-                            </div>
+                            <input type="text" class="form-control" id="food_name" name="food_name"
+                                   value="{{ food_name }}" placeholder="Плов, пицца, суши">
                         </div>
-                    </a>
 
-                    <div class="modal fade" id="FoodModal{{meal.id}}" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">{{ meal.name }}</h5>
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <span>&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="card-img"></div>
-                                    <div class="py-3">
-                                        <small class="bg-danger">Порция: {{meal.size}} {{meal.units.name}}</small>
-                                        <small>Цена: {{meal.price}} тенге</small><br>
-                                        <small>
-                                            <a href="#">
-                                                <i class="fa-solid fa-location-pin"></i>
-                                                {{meal.address.location.name}}, {{meal.address.restaurant.name}}
-                                            </a>
-                                        </small>
-                                        <div class="row my-2">
-                                            {% for category in meal.categories.all %}
-                                            <div class="btn btn-light btn-sm mx-2 ">
-                                                {{ category.name }}
-                                            </div>
-                                            {% endfor %}
+                        {% if categories %}
+                            <h5 class="text-info">Категории</h5>
+                            <ul class="list">
+
+                                {% for category in categories %}
+                                    <li class="my-2">
+                                        <input class="category-input" type="checkbox" hidden
+                                               id="category-{{ category.id }}"
+                                               name="category-{{ category.id }}">
+                                        <div class="link category btn btn-light w-100"
+                                             data-target="category-{{ category.id }}">
+                                            {{ category.name }}
                                         </div>
-                                        <p>{{ meal.description|capfirst }}</p>
-                                        <div class="buy btn btn-info" data-target="{{meal.id}}"
-                                             data-description="{{meal.name}}">
-                                            Добавить в корзину
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+
+                            <input type="number" id="page-number" name="page_number" hidden>
+                            <button type="submit" class="btn btn-info">
+                                <i class="fa-solid fa-magnifying-glass"></i> Показать
+                            </button>
+                            </form>
+                        {% else %}
+                            <p><small>Упс... что-то пошло не так</small></p>
+                        {% endif %}
+                </div>
+            </div>
+
+
+            <div class="col-9">
+                <div class="mb-5">
+                    <h2 class="text-white">Не забываемый вкус в каждом блюде</h2>
+                </div>
+                <div class="row">
+                    {% if meals %}
+                        {% for meal in meals %}
+                            <div class="col-4 my-3">
+                                <a href="#" class="text-center pl-1 w-100" data-toggle="modal"
+                                   data-target="#FoodModal{{ meal.id }}">
+                                    <div class="card">
+                                        <div class="card-img"></div>
+                                        <div class="py-2">
+                                            <h4>{{ meal.name }}</h4>
+                                            <small>{{ meal.price }} тенге</small><br>
+                                            <small class="bg-danger">{{ meal.size }} {{ meal.units.name }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <div class="modal fade" id="FoodModal{{ meal.id }}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">{{ meal.name }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span>&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="card-img"></div>
+                                                <div class="py-3">
+                                                    <small class="bg-danger">Порция: {{ meal.size }} {{ meal.units.name }}</small>
+                                                    <small>Цена: {{ meal.price }} тенге</small><br>
+                                                    <small>
+                                                        <a href="#">
+                                                            <i class="fa-solid fa-location-pin"></i>
+                                                            {{ meal.address.location.name }}, {{ meal.address.restaurant.name }}
+                                                        </a>
+                                                    </small>
+                                                    <div class="row my-2">
+                                                        {% for category in meal.categories.all %}
+                                                            <div class="btn btn-light btn-sm mx-2 ">
+                                                                {{ category.name }}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <p>{{ meal.description|capfirst }}</p>
+                                                    <div class="buy btn btn-info" data-target="{{ meal.id }}"
+                                                         data-description="{{ meal.name }}">
+                                                        Добавить в корзину
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        {% endfor %}
                         </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="bg-white rounded shadow p-3 d-flex">
-                {% for page in pages %}
-                <button type="submit"
-                        class="btn page-btn {% if page|slugify == page_number|slugify %}btn-info{% else %}btn-light{% endif %}">
-                    {{page}}
-                </button>
-                {% endfor %}
-            </div>
-            {% else %}
-            <p class="text-white">Упс, на данный момент заказы закрыты</p>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="orders" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Оформить заказ</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/success_order/" method="post" class="px-3">
-                    <h5 class="my-2 text-info">Оформление:</h5>
-                    {% csrf_token %}
-                    <input type="text" name="orders" id="orders-input" hidden>
-                    <div class="form-group">
-                        <label>Выберите дату доставки</label>
-                        <input type="date" class="form-control" name="date">
-                    </div>
-                    <div class="form-group">
-                        <label>Выберите время доставки</label>
-                        <select class="form-control">
-                            <option value="morning">9:00-10:00</option>
-                            <option value="lunch">12:00-13:00</option>
-                            <option value="dinner">16:00-17:00</option>
-                        </select>
-                    </div>
-                    {% if request.user.is_authenticated %}
+                        <div class="bg-white rounded shadow p-3 d-flex">
+                            {% for page in pages %}
+                                <button type="submit"
+                                        class="btn page-btn {% if page|slugify == page_number|slugify %}btn-info{% else %}btn-light{% endif %}">
+                                    {{ page }}
+                                </button>
+                            {% endfor %}
+                        </div>
                     {% else %}
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Ваше ФИО">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="contact" placeholder="Способ связи">
-                    </div>
-                    <div class="form-group">
-                        <textarea class="form-control" name="note" placeholder="Дополнение к заказу"></textarea>
-                    </div>
+                        <p class="text-white">Упс, на данный момент заказы закрыты</p>
                     {% endif %}
-                    <h5 class="my-2 text-info">Финальный список заказов:</h5>
-                    <ul class="list-group" id="orders-list">
-                    </ul>
-
-                    <div class="text-center my-3">
-                        <button type="submit" class="btn btn-info">Заказать</button>
-                    </div>
-                </form>
-
-
             </div>
         </div>
     </div>
-</div>
+
+
+    <div class="modal fade" id="orders" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Оформить заказ</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/success_order/" method="post" class="px-3">
+                        <h5 class="my-2 text-info">Оформление:</h5>
+                        {% csrf_token %}
+                        <input type="text" name="orders" id="orders-input" hidden>
+                        <div class="form-group">
+                            <label>Выберите дату доставки</label>
+                            <input type="date" class="form-control" name="date">
+                        </div>
+                        <div class="form-group">
+                            <label>Выберите время доставки</label>
+                            <select class="form-control">
+                                <option value="morning">9:00-10:00</option>
+                                <option value="lunch">12:00-13:00</option>
+                                <option value="dinner">16:00-17:00</option>
+                            </select>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        {% else %}
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" placeholder="Ваше ФИО">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="contact"
+                                       placeholder="Укажите номер телефона, или другой способ связи">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="contact"
+                                       placeholder="Укажите ваш адресс">
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="note" placeholder="Дополнение к заказу"></textarea>
+                            </div>
+                        {% endif %}
+                        <h5 class="my-2 text-info">Финальный список заказов:</h5>
+                        <ul class="list-group" id="orders-list">
+                        </ul>
+
+                        <div class="text-center my-3">
+                            <button type="submit" class="btn btn-info">Заказать</button>
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
 
-<script>
-    $(".category").on("click", function (e) {
-        let el = e.target;
+    <script>
+        $(".category").on("click", function (e) {
+            let el = e.target;
 
-        el.classList.toggle('btn-light');
-        el.classList.toggle('btn-info');
+            el.classList.toggle('btn-light');
+            el.classList.toggle('btn-info');
 
-        let target = el.getAttribute('data-target');
-        let inp = $("#" + target);
-        inp.prop("checked", !inp.prop("checked"));
-    });
+            let target = el.getAttribute('data-target');
+            let inp = $("#" + target);
+            inp.prop("checked", !inp.prop("checked"));
+        });
 
-    $(".page-btn").on("click", function (e) {
-        let value = e.target.innerText
-        $("#page-number").val(value);
-        $("#filtering-form").submit()
-    });
+        $(".page-btn").on("click", function (e) {
+            let value = e.target.innerText
+            $("#page-number").val(value);
+            $("#filtering-form").submit()
+        });
 
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-    }
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
 
-    let orders = "";
-    // localStorage.orders = "";
-    if (localStorage.orders) {
-        orders = localStorage.getItem("orders");
-        orders.split("|").forEach(myFunction);
+        let orders = "";
+        // localStorage.orders = "";
+        if (localStorage.orders) {
+            orders = localStorage.getItem("orders");
+            orders.split("|").forEach(myFunction);
 
-        function myFunction(value, index, array) {
-            if (value) {
-                let name = value.split("-")[1]
+            function myFunction(value, index, array) {
+                if (value) {
+                    let name = value.split("-")[1]
 
-                $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`)
-                $("#orders-input").val(orders);
+                    $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`)
+                    $("#orders-input").val(orders);
+                }
             }
         }
-    }
 
 
-    $(".buy").on("click", (e) => {
-        alert("Добавлено в корзину, чтобы оформить заказ, нажмите кнопку завершить заказ");
-        let name = e.target.getAttribute("data-description");
-        let pk = e.target.getAttribute("data-target");
-        orders = orders + pk + "-" + name + "|"
-        localStorage.setItem("orders", orders);
+        $(".buy").on("click", (e) => {
+            alert("Добавлено в корзину, чтобы оформить заказ, нажмите кнопку завершить заказ");
+            let name = e.target.getAttribute("data-description");
+            let pk = e.target.getAttribute("data-target");
+            orders = orders + pk + "-" + name + "|"
+            localStorage.setItem("orders", orders);
 
-        $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`);
-        $("#orders-input").val(orders);
-    })
-</script>
+            $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`);
+            $("#orders-input").val(orders);
+        })
+    </script>
 {% endblock %}
 
