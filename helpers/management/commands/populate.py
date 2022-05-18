@@ -117,14 +117,14 @@ class Command(BaseCommand):
                 models_company.CompanyAddress(
                     name=faker.name(),
                     location=random.choice(addresses),
-                    restaurant=random.choice(companies),
+                    company=random.choice(companies),
                 ),
             )
 
         for restaurant_address in companies_addresses:
             restaurant_address.save()
-        for x in range(random.randint(1, 3)):
-            restaurant_address.phones.add(random.choice(phones))
+            for x in range(random.randint(1, 3)):
+                restaurant_address.phones.add(random.choice(phones))
 
         print("Restaurant Addresses created successfully")
         # ---------------------
