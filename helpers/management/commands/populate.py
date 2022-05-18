@@ -51,9 +51,8 @@ class Command(BaseCommand):
 
         users = [
             User(username="user", first_name="Данил", last_name="Мельников", is_superuser=True, is_staff=True),
-            User(username="adinay", first_name="Адинай", last_name="Туратбекова"),
-            User(username="timur", first_name="Тимур", last_name="Болотов"),
-            User(username="ruslan", first_name="Руслан", last_name="Неманов"),
+            User(username="almau", first_name="Алмаю", last_name="Университет"),
+            User(username="one_technologies", first_name="One", last_name="Technologies"),
         ]
 
         for x in range(100):
@@ -90,35 +89,39 @@ class Command(BaseCommand):
 
         print("Phone created successfully")
 
-        restaurants = [
-            models_company.Company(name='Лагман Сити', user=users[1], role='restaurant',
+        companies = [
+            models_company.Company(name='Лагман Сити', user=users[6], role='restaurant',
                                    description="Фаст-фуд Плов в коробочке. Восточная кухня. Средний чек 1200-1500тг.Т РЦ Mega Center ул. Розыбакие"),
-            models_company.Company(name='У Тимурчика', user=users[2], role='restaurant',
+            models_company.Company(name='У Тимурчика', user=users[5], role='restaurant',
                                    description="Блинчики с разными начинками, вкусные, хрустящие, с шоколадом"),
-            models_company.Company(name='Хлеб.kz', user=users[2], role='restaurant',
-                                   description="Домашний испеченный хлеб, натуральные ингрдиенты")
+            models_company.Company(name='Хлеб.kz', user=users[7], role='restaurant',
+                                   description="Домашний испеченный хлеб, натуральные ингрдиенты"),
+            models_company.Company(name='АлмаЮ', user=users[1], role='company',
+                                   description=""),
+            models_company.Company(name='One Technologies', user=users[2], role='company',
+                                   description=""),
         ]
 
-        for restaurant in restaurants:
-            restaurant.save()
-        for x in range(random.randint(1, 3)):
-            restaurant.phones.add(random.choice(phones))
+        for company in companies:
+            company.save()
+            for _ in range(random.randint(1, 3)):
+                company.phones.add(random.choice(phones))
 
         print("Restaurants created successfully")
 
         # ---------------------
-        restaurant_addresses = []
+        companies_addresses = []
 
         for x in range(20):
-            restaurant_addresses.append(
+            companies_addresses.append(
                 models_company.CompanyAddress(
                     name=faker.name(),
                     location=random.choice(addresses),
-                    restaurant=random.choice(restaurants),
+                    restaurant=random.choice(companies),
                 ),
             )
 
-        for restaurant_address in restaurant_addresses:
+        for restaurant_address in companies_addresses:
             restaurant_address.save()
         for x in range(random.randint(1, 3)):
             restaurant_address.phones.add(random.choice(phones))
@@ -161,7 +164,7 @@ class Command(BaseCommand):
         meals = []
 
         for i in range(100):
-            meals.append(models_menu.Meal(**meal_generation(units, restaurant_addresses)))
+            meals.append(models_menu.Meal(**meal_generation(units, companies_addresses)))
 
         for meal in meals:
             meal.save()

@@ -13,6 +13,7 @@ class Company(Base):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Администратор')
     phones = models.ManyToManyField(Phone, verbose_name='Телефона')
     description = models.CharField("Описание", max_length=512, blank=True)
+    location = models.CharField("Адрес", max_length=512)
     role = models.CharField(
         "Роль",
         max_length=20,
@@ -27,7 +28,7 @@ class Company(Base):
 
 
 class CompanyAddress(Base):
-    restaurant = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     phones = models.ManyToManyField(Phone, verbose_name='Номер точки')
 

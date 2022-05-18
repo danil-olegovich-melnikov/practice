@@ -35,4 +35,26 @@ class Comments(Base):
     meal = models.ForeignKey(Meal, verbose_name='Блюда', on_delete=models.CASCADE, blank=True, null=True)
 
 
+class Order(models.Model):
+    created_date = models.DateField(auto_now=True)
+    delivery_date = models.DateField("Дата заказа")
+    time_delivery = models.CharField("Время доставки", max_length=5,
+                                     choices=(
+                                         ("9:00", "9:00"),
+                                         ("12:00", "12:00"),
+                                         ("15:00", "15:00"),
+                                     ))
+    name = models.CharField("ФИО", max_length=256, blank=True)
+    phone = models.CharField("Способ связи", max_length=256, blank=True)
+    address = models.CharField("Адрес", max_length=256, blank=True)
+    description = models.CharField("Описание", max_length=1024, blank=True)
+    meals = models.ManyToManyField(Meal)
+    user = models.ForeignKey(CompanyAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.PositiveIntegerField("Общая стоимость", default=0)
 
+    class Meta:
+        ordering = ['-id']
+
+
+    def __str__(self):
+        return f"Заказ: {self.id}"

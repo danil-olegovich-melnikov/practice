@@ -137,41 +137,51 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="/success_order/" method="post" class="px-3">
+                    <form action="/process_order/" method="post" class="px-3">
                         <h5 class="my-2 text-info">Оформление:</h5>
                         {% csrf_token %}
-                        <input type="text" name="orders" id="orders-input" hidden>
+                        <input type="text" name="meals" id="orders-input" hidden>
                         <div class="form-group">
                             <label>Выберите дату доставки</label>
-                            <input type="date" class="form-control" name="date">
+                            <input type="date" class="form-control" name="delivery_date" required>
                         </div>
                         <div class="form-group">
                             <label>Выберите время доставки</label>
-                            <select class="form-control">
-                                <option value="morning">9:00-10:00</option>
-                                <option value="lunch">12:00-13:00</option>
-                                <option value="dinner">16:00-17:00</option>
+                            <select class="form-control" name="time_delivery">
+                                <option value="9:00">9:00-10:00</option>
+                                <option value="12:00">12:00-13:00</option>
+                                <option value="16:00">16:00-17:00</option>
                             </select>
                         </div>
-                        {% if request.user.is_authenticated %}
+                        {% if request.user.is_authenticated and user_addresses %}
+                            <div class="form-group">
+                                <label>Выберите адрес доставки</label>
+                                <select class="form-control" name="company_address">
+                                    {% for address in user_addresses %}
+                                        <option value="{{ address.id }}">{{ address.location.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         {% else %}
                             <div class="form-group">
-                                <input type="text" class="form-control" name="name" placeholder="Ваше ФИО">
+                                <input type="text" class="form-control" name="name" placeholder="Ваше ФИО" required>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" name="contact"
-                                       placeholder="Укажите номер телефона, или другой способ связи">
+                                <input type="text" class="form-control" name="phone"
+                                       placeholder="Укажите номер телефона, или другой способ связи" required>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" name="contact"
-                                       placeholder="Укажите ваш адресс">
+                                <input type="text" class="form-control" name="address"
+                                       placeholder="Укажите ваш адрес" required>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" name="note" placeholder="Дополнение к заказу"></textarea>
+                                <textarea class="form-control" name="description" placeholder="Дополнение к заказу"
+                                          required></textarea>
                             </div>
                         {% endif %}
                         <h5 class="my-2 text-info">Финальный список заказов:</h5>
-                        <ul class="list-group" id="orders-list">
+                        <ul class="list-group mt-2" id="orders-list">
+
                         </ul>
 
                         <div class="text-center my-3">
@@ -220,6 +230,34 @@
         }
 
         let orders = "";
+
+        function delete_order(pk) {
+            $(`#list-order-${pk}`).remove();
+            orders = localStorage.getItem("orders");
+            let new_orders = ""
+            orders = orders.split("|").forEach(myFunction);
+
+
+            function myFunction(value, index, array) {
+                if (!value.includes(pk)) {
+                    new_orders += value + "|"
+                }
+            }
+
+            new_orders = new_orders.replaceAll("||", "|");
+            localStorage.setItem("orders", new_orders);
+        }
+
+        function wrapper_order(name, id) {
+            return (
+                `<li id="list-order-${id}" class="list-group-item d-flex justify-content-between">
+                    <p class="font-weight-normal m-0">${name}</p>
+                    <div class="btn btn-outline-danger btn-sm"
+                    onclick="delete_order(${id})">X</div>
+                </li>`
+            )
+        }
+
         // localStorage.orders = "";
         if (localStorage.orders) {
             orders = localStorage.getItem("orders");
@@ -227,9 +265,10 @@
 
             function myFunction(value, index, array) {
                 if (value) {
+                    let id = value.split("-")[0]
                     let name = value.split("-")[1]
 
-                    $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`)
+                    $("#orders-list").append(wrapper_order(name, id))
                     $("#orders-input").val(orders);
                 }
             }
@@ -243,7 +282,7 @@
             orders = orders + pk + "-" + name + "|"
             localStorage.setItem("orders", orders);
 
-            $("#orders-list").append(`<li class="list-group-item"><small>${name}</small></li>`);
+            $("#orders-list").append(wrapper_order(name, pk));
             $("#orders-input").val(orders);
         })
     </script>

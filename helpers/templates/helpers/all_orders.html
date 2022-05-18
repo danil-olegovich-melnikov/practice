@@ -1,0 +1,45 @@
+{% extends "helpers/base.html" %}
+
+{% block page_title %}Посмотреть все заказы{% endblock %}
+
+{% block body %}
+    <div class="container bg-white mt-5 py-5">
+        <h3>Все заказы</h3>
+
+        {% for order in orders %}
+            <div class="bg-light p-3 m-3">
+                <h6>Номер заказа {{ order.id }}</h6>
+                <small>Дата заявки: {{ order.created_date }}</small>
+                <ul class="list-group mt-2">
+                    <li class="list-group-item">Дата доставки: {{ order.delivery_date }}
+                        - {{ order.time_delivery }}</li>
+                    {% if order.user %}
+                        <li class="list-group-item">
+                            Компания: {{ order.user.company.user.first_name }} {{ order.user.company.user.last_name }}</li>
+                        <li class="list-group-item">
+                            Адрес: {{ order.user.location.name }} {{ order.user.location.name }}</li>
+                    {% else %}
+                        <li class="list-group-item">ФИО: {{ order.name }}</li>
+                        <li class="list-group-item">Способ связи: {{ order.phone }}</li>
+                        <li class="list-group-item">Адрес: {{ order.address }}</li>
+                        <li class="list-group-item">Описание: {{ order.description }}</li>
+                    {% endif %}
+                </ul>
+
+                <h6 class="mt-4">Список блюд</h6>
+                <table class="table">
+                    {% for meal in order.meals.all %}
+                        <tr>
+                            <td>{{ meal.name }}</td>
+                            <td>{{ meal.price }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td><strong>Итого:</strong></td>
+                        <td class="amount"><strong>{{ order.amount }} тенге</strong></td>
+                    </tr>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

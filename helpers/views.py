@@ -1,8 +1,10 @@
-from django.shortcuts import render, redirect
-from menu.models import Meal, Category
-from company.models import Company, CompanyAddress
 from django.core.paginator import Paginator
+from django.shortcuts import render, redirect
+
+from company.models import Company, CompanyAddress
 from helpers.models import Form, Faqs
+from menu.models import Meal, Category, Order
+from django.http import HttpResponseNotFound
 
 
 # Create your views here.
@@ -15,6 +17,13 @@ def search(request):
     meals = Meal.objects.all()
     categories = Category.objects.all()
     page_number = 1
+
+    try:
+        user_company = Company.objects.get(user=request.user)
+        addresses = CompanyAddress.objects.filter(company=user_company)
+    except:
+        user_company = ""
+        addresses = ""
 
     if request.method == "POST":
         food_name = request.POST.get("food_name", "")
@@ -49,6 +58,7 @@ def search(request):
     data['pages'] = meals.page_range
     data['page_number'] = page_number
     data['categories'] = categories
+    data['user_addresses'] = addresses
 
     return render(request, 'helpers/search.html', data)
 
@@ -93,5 +103,52 @@ def restaurant(request, pk):
         return redirect("/")
 
 
+def process_order(request):
+    if request.method == "POST":
+        order = Order.objects.create(
+            delivery_date=request.POST.get("delivery_date", ""),
+            time_delivery=request.POST.get("time_delivery", ""),
+            name=request.POST.get("name", ""),
+            phone=request.POST.get("phone", ""),
+            address=request.POST.get("address", ""),
+            description=request.POST.get("description", ""),
+        )
+
+        meals = str(request.POST.get("meals")),
+        user = request.user
+
+        if user.is_authenticated:
+            try:
+                company_address = int(request.POST.get("company_address"))
+                company = Company.objects.get(user=user)
+                address = CompanyAddress.objects.get(company=company, id=company_address)
+                order.user = address
+                order.save()
+            except:
+                pass
+
+        amount = 0
+        for pair in meals[0].split("|"):
+            pk = pair.split("-")
+            if pk[0].strip():
+                meal = Meal.objects.get(pk=int(pk[0]))
+                order.meals.add(meal)
+                amount += meal.price
+
+        order.amount = amount
+        order.save()
+
+        return redirect("/success_order/")
+
 def success_order(request):
     return render(request, "helpers/success-order.html")
+
+def view_orders(request):
+    if not (request.user.is_authenticated and request.user.is_superuser):
+        return HttpResponseNotFound()
+
+    data = {
+        "orders": Order.objects.all(),
+    }
+
+    return render(request, "helpers/all_orders.html", data)

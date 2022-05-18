@@ -12,8 +12,6 @@ class Base(models.Model):
 
     class Meta:
         abstract = True
-
-
 class Location(Base):
     name = models.CharField('Адрес', max_length=120)
 
@@ -30,3 +28,4 @@ class Form(Base):
 
 class Faqs(Base):
     description = models.CharField("FAQS", max_length=256)
+

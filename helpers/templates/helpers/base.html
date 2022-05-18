@@ -20,6 +20,14 @@
             {% block nav_item %}
             {% endblock %}
         </li>
+        {% if request.user.is_superuser %}
+            <li class="nav-item ml-3">
+                <a class="nav-link btn btn-outline-primary px-2"
+                   href="{% url 'helpers:view_orders' %}">
+                    Заказы
+                </a>
+            </li>
+        {% endif %}
         <li class="nav-item ml-3">
             <a class="nav-link btn btn-outline-primary px-2" href="/search/">Меню</a>
         </li>
@@ -27,19 +35,19 @@
             <a class="nav-link btn btn-outline-primary px-2" href="/restaurants/">Заведения</a>
         </li>
         {% if request.user.is_authenticated %}
-        <li class="nav-item ml-3">
-            <a class="nav-link btn btn-outline-primary px-2"
-               href="{% url 'worker:logout' %}">
-                Выйти в аккаунт
-            </a>
-        </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link btn btn-outline-primary px-2"
+                   href="{% url 'worker:logout' %}">
+                    Выйти в аккаунт
+                </a>
+            </li>
         {% else %}
-        <li class="nav-item ml-3">
-            <a class="nav-link btn btn-outline-primary px-2"
-               href="{% url 'worker:login' %}">
-                Войти в аккаунт
-            </a>
-        </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link btn btn-outline-primary px-2"
+                   href="{% url 'worker:login' %}">
+                    Войти в аккаунт
+                </a>
+            </li>
         {% endif %}
 
     </ul>
