@@ -3,14 +3,14 @@
 
 {% block nav_item %}
     <div class="nav-link btn btn-outline-info px-2" data-toggle="modal" data-target="#orders" id="showorders">
-        Оформить заказ
+        Оформить
     </div>
 {% endblock %}
 
 {% block body %}
     <div class="container search">
         <div class="row py-5">
-            <div class="col-3">
+            <div class="col col-12 col-lg-3 col-md-6 col-sm-12 col-xs-12 mx-auto mb-5 mb-lg-0">
                 <div class="bg-white rounded shadow py-4 px-2 text-center">
                     <form method="POST" id="filtering-form">
                         {% csrf_token %}
@@ -51,14 +51,14 @@
             </div>
 
 
-            <div class="col-9">
+            <div class="col col-12 col-lg-9 col-md-12 col-sm-12 col-xs-12">
                 <div class="mb-5">
                     <h2 class="text-white">Не забываемый вкус в каждом блюде</h2>
                 </div>
                 <div class="row">
                     {% if meals %}
                         {% for meal in meals %}
-                            <div class="col-4 my-3">
+                            <div class="col col-lg-4 col-md-6 col-12 my-3">
                                 <a href="#" class="text-center pl-1 w-100" data-toggle="modal"
                                    data-target="#FoodModal{{ meal.id }}">
                                     <div class="card">
@@ -111,10 +111,10 @@
                             </div>
                         {% endfor %}
                         </div>
-                        <div class="bg-white rounded shadow p-3 d-flex">
+                        <div class="bg-white rounded shadow p-3">
                             {% for page in pages %}
                                 <button type="submit"
-                                        class="btn page-btn {% if page|slugify == page_number|slugify %}btn-info{% else %}btn-light{% endif %}">
+                                        class="btn my-2 page-btn {% if page|slugify == page_number|slugify %}btn-info{% else %}btn-light{% endif %}">
                                     {{ page }}
                                 </button>
                             {% endfor %}

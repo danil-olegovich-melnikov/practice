@@ -91,7 +91,7 @@ def faqs(request):
 def restaurant(request, pk):
     try:
         company = Company.objects.get(id=pk, role='restaurant')
-        company_addresses = CompanyAddress.objects.filter(restaurant=company)
+        company_addresses = CompanyAddress.objects.filter(company=company)
 
         data = {
             "company": company,
