@@ -22,8 +22,8 @@ class Meal(Base):
     address = models.ForeignKey(CompanyAddress, on_delete=models.CASCADE, verbose_name='Адресс доставки')
     categories = models.ManyToManyField(Category, blank=True, verbose_name='Категории')
     price = models.PositiveIntegerField("Цена")
-    description = models.CharField("Описание", max_length=512)
-    size = models.PositiveIntegerField("Порция кол-во")
+    description = models.CharField("Описание", max_length=512, blank=True)
+    size = models.FloatField("Порция кол-во")
     units = models.ForeignKey(Units, on_delete=models.SET_NULL, blank=True, null=True, verbose_name='Единица Измерения')
     album = models.ManyToManyField(MealAlbum, blank=True, verbose_name='Альбом фотографий')
 

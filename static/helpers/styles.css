@@ -90,6 +90,11 @@ p {
   background-color: #ccc;
 } */
 
+
+img {
+    object-fit: cover;
+}
+
 .panel {
     padding: 0 18px;
     display: none;

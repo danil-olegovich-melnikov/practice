@@ -18,7 +18,7 @@
                 <h3>Адреса доставок</h3>
                 {% for address in company_addresses %}
                     <a href="/search?address={{ address.id }}" class="btn btn-outline-light m-2"><i
-                            class="fa-solid fa-location-arrow"></i> {{ address.name }}</a>
+                            class="fa-solid fa-location-arrow"></i> {{ address.location.name }}</a>
                 {% endfor %}
             </div>
 
