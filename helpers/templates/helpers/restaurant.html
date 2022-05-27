@@ -1,17 +1,19 @@
 {% extends 'helpers/base.html' %}
 
-{% block page_title %}Ресторан - {{ company.name }}{% endblock %}
+{% block page_title %}есторан - {{ company.name }}{% endblock %}
 
 {% block body %}
     <main class="text-white">
         <div class="container col-xxl-8 px-4 py-5">
             <div class="row flex-lg-row-reverse align-items-center g-5 py-5 mx-auto">
                 <div class="col-12 col-md-6">
-                    <div class="img-placeholder mb-4 mb-md-0"></div>
+                    <div class="img-placeholder mb-4 mb-md-0">
+                        <img src="{{ company.image.url }}" alt="{{ company.name }}" class="w-100">
+                    </div>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mt-4 mt-md-0">
                     <h1 class="display-5 fw-bold lh-1 mb-3">{{ company.name }}</h1>
-                    <p class="lead">{{ company.description }}</p>
+                    <p class="lead">{{ company.description |safe }}</p>
                 </div>
             </div>
             <div class="text-center">

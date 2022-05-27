@@ -14,6 +14,7 @@ class Company(Base):
     phones = models.ManyToManyField(Phone, verbose_name='Телефона')
     description = models.CharField("Описание", max_length=512, blank=True)
     location = models.CharField("Адрес", max_length=512)
+    image = models.ImageField("Обложка", upload_to="company/cover/", blank=True)
     role = models.CharField(
         "Роль",
         max_length=20,

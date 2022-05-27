@@ -1,34 +1,37 @@
 {% extends "helpers/base.html" %}
 {% load static %}
 
-{% block page_title %}Рестораны - Pelegrin{% endblock%}
+{% block page_title %}Рестораны - Pelegrin{% endblock %}
 
 {% block body %}
-<div class="text-white">
-    <hr class="featurette-divider">
+    <div class="text-white">
+        <hr class="featurette-divider">
 
-    <div class="px-4 pt-5 my-5 text-center ">
-        <h1 class="display-5 fw-bold">Рестораны</h1>
-    </div>
+        <div class="px-4 pt-5 my-5 text-center ">
+            <h1 class="display-5 fw-bold">Рестораны</h1>
+        </div>
 
-    {% for company in companies %}
-    <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row-reverse align-items-center g-5 py-5 mx-auto">
-            <div class="col-12 col-md-6">
-                <div class="img-placeholder mb-4 mb-md-0"></div>
-            </div>
-            <div class="col-12 col-md-6">
-                <h1 class="display-5 fw-bold lh-1 mb-3">{{ company.name }}</h1>
-                <p class="lead">{{company.description}}</p>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                    <a href="/restaurants/{{company.id}}" type="button" class="btn btn-primary btn-lg px-4 me-md-2">Подробнее »</a>
+        {% for company in companies %}
+            <div class="container col-xxl-8 px-4 py-5">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-5 mx-auto">
+                    <div class="col-12 col-md-6">
+                        <div class="img-placeholder mb-4 mb-md-0">
+                            <img src="{{ company.image.url }}" alt="{{ company.name }}" class="w-100">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 mt-4 mt-md-0">
+                        <h1 class="display-5 fw-bold lh-1 mb-3">{{ company.name }}</h1>
+                        <p class="lead">{{ company.description |safe }}</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <a href="/restaurants/{{ company.id }}" type="button"
+                               class="btn btn-primary btn-lg px-4 me-md-2">Подробнее »</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <hr class="featurette-divider">
-    {% endfor %}
-</div>
+            <hr class="featurette-divider">
+        {% endfor %}
+    </div>
 
 {% endblock %}

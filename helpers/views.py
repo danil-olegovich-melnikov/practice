@@ -51,7 +51,7 @@ def search(request):
         if len(address) > 0:
             meals = meals.filter(address_id=address)
         elif len(company) > 0:
-            meals = meals.filter(address_id__in=CompanyAddress.objects.filter(restaurant_id=company))
+            meals = meals.filter(address_id__in=CompanyAddress.objects.filter(company_id=company))
 
     meals = Paginator(meals, 9)
     data['meals'] = meals.page(page_number)
